@@ -1,0 +1,22 @@
+version: "3.3"
+services:
+  mongo:
+    image: mongo:4.2.5
+  app:
+    build: .
+    environment:
+      WAIT_HOSTS: mongo:27017
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./public/image:/root/public/image
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./certs:/etc/ssl/certs
+    depends_on:
+      - app
